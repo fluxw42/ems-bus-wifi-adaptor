@@ -1,14 +1,30 @@
 language: c
-sudo: required
 os: linux
 dist: trusty
 
-before_install:
-  - sudo apt-get update -q
-  - sudo apt-get install -y make unrar-free autoconf automake libtool gcc g++ gperf flex \
-                            bison texinfo gawk ncurses-dev libexpat-dev python-dev python \
-                            python-serial sed git unzip bash help2man wget bzip2 libtool-bin
+addons:
+  apt:
+    packages:
+    - autoconf
+    - build-essential
+    - gperf
+    - bison
+    - flex
+    - texinfo
+    - libtool
+    - libncurses5-dev
+    - wget
+    - gawk
+    - libexpat-dev
+
+cache:
+  directories:
+  - ~/Espressif
 
 install:
-  - git clone --recursive https://github.com/pfalcon/esp-open-sdk.git ~/esp-open-sdk
-  - cd ~/esp-open-sdk && make STANDALONE=y
+  - "$TRAVIS_BUILD_DIR/.travis/setup-build-environment.sh"
+
+env:
+- XTENSA_TOOLS_ROOT=~/Espressif/crosstool-NG/builds/xtensa-lx106-elf/bin SDK_BASE=~/Espressif/ESP8266_SDK ESPTOOL=~/Espressif/esptool/esptool.py PATH=$XTENSA_TOOLS_ROOT:$PATH
+
+script: make -C "$TRAVIS_BUILD_DIR"
