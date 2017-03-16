@@ -1,3 +1,5 @@
 .idea/
+firmware/
+build/
 /*.bin
 /*.o
