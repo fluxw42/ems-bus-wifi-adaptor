@@ -23,15 +23,31 @@ void toggle_debug() {
         GPIO_OUTPUT_SET(DEBUG_PIN_NO, 0);
 }
 
-
 void gpio_interrupt(void *arg) {
 
-    uint32	gpio_status;
+	// Acknowledge interrupt, and disable GPIO interrupts temporary
+    uint32 gpio_status = GPIO_REG_READ(GPIO_STATUS_ADDRESS);
+    ETS_GPIO_INTR_DISABLE();
 
-    gpio_status	=	GPIO_REG_READ(GPIO_STATUS_ADDRESS);
+	toggle_debug();
+	toggle_debug();
+
+	os_delay_us(50);
+
+	uint32 bit;
+	for(bit = 0; bit < 9; bit++ ){
+		toggle_debug();
+		os_delay_us(102);
+	}
+
+	toggle_debug();
+	toggle_debug();
+	toggle_debug();
+
+	// Clear interrupt flag again, and rearm GPIO interrupts
     GPIO_REG_WRITE(GPIO_STATUS_W1TC_ADDRESS, gpio_status);
-
-    toggle_debug();
+    gpio_pin_intr_state_set(GPIO_ID_PIN(3), GPIO_PIN_INTR_ANYEGDE);
+    ETS_GPIO_INTR_ENABLE();
 
 }
 
@@ -77,8 +93,8 @@ void ICACHE_FLASH_ATTR user_init()
     GPIO_DIS_OUTPUT(GPIO_ID_PIN(3));                                  //Configure it in input mode.
     ETS_GPIO_INTR_DISABLE();                                          //Close the GPIO interrupt
     ETS_GPIO_INTR_ATTACH(&gpio_interrupt,NULL);                       //Register the interrupt function
-    gpio_pin_intr_state_set(GPIO_ID_PIN(3), GPIO_PIN_INTR_ANYEGDE);   //Falling edge trigger
-    ETS_GPIO_INTR_ENABLE() ;                                          //Enable the GPIO interrupt
+    gpio_pin_intr_state_set(GPIO_ID_PIN(3), GPIO_PIN_INTR_ANYEGDE);   //Any edge trigger
+    ETS_GPIO_INTR_ENABLE();                                           //Enable the GPIO interrupt
 
     //Disarm timer
     os_timer_disarm(&some_timer);
