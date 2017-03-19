@@ -24,7 +24,7 @@ XTENSA_TOOLS_ROOT ?= /opt/Espressif/crosstool-NG/builds/xtensa-lx106-elf/bin
 SDK_BASE	?= /opt/Espressif/ESP8266_SDK
 
 # esptool.py path and port
-ESPTOOL		?= esptool.py
+ESPTOOL		?= /opt/Espressif/esptool/esptool.py
 ESPPORT		?= /dev/ttyUSB0
 
 # name for the target project
