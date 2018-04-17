@@ -2,12 +2,18 @@
 
 set -e
 
+BASE_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 if [ ! -d "/home/travis/Espressif/esptool" ]; then
 
 	# Download and build lx106 cross-tool
 	mkdir -p ~/Espressif
 	git clone -b lx106 git://github.com/jcmvbkbc/crosstool-NG.git ~/Espressif/crosstool-NG
 	cd ~/Espressif/crosstool-NG
+
+	# Some downloads moved, apply patch to update URL
+	patch -p1 < "${BASE_DIR}/patches/0001-Fix-download-url-for-mpc-1.0.2.patch"
+
 	./bootstrap && ./configure --prefix=`pwd` && make && make install
 	./ct-ng xtensa-lx106-elf
 	./ct-ng build

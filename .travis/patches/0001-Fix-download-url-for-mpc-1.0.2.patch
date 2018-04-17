@@ -1,0 +1,25 @@
+From abde31a094fd36b0e86759cb2de2816f227856dd Mon Sep 17 00:00:00 2001
+From: Jeroen Meulemeester <jeroen.meulemeester@gmail.com>
+Date: Tue, 17 Apr 2018 21:01:57 +0200
+Subject: [PATCH] Fix download url for mpc-1.0.2
+
+---
+ scripts/build/companion_libs/140-mpc.sh | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/scripts/build/companion_libs/140-mpc.sh b/scripts/build/companion_libs/140-mpc.sh
+index 9ceb7e5..f1276db 100644
+--- a/scripts/build/companion_libs/140-mpc.sh
++++ b/scripts/build/companion_libs/140-mpc.sh
+@@ -13,7 +13,7 @@ if [ "${CT_MPC}" = "y" ]; then
+ # Download MPC
+ do_mpc_get() {
+     CT_GetFile "mpc-${CT_MPC_VERSION}" .tar.gz      \
+-        http://www.multiprecision.org/mpc/download
++        https://ftp.gnu.org/gnu/mpc/
+ }
+ 
+ # Extract MPC
+-- 
+2.7.4
+
